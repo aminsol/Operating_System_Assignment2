@@ -124,7 +124,7 @@ void sendFileName(const char* fileName)
 	/* Get the length of the file name */
 	int fileNameSize = strlen(fileName);
 
-    if (fileNameSize > SHARED_MEMORY_CHUNK_SIZE){
+    if (fileNameSize > MAX_MSG_PAYLOAD){
         exit(-1);
     }
     fileNameMsg namemsg = {-1, -1};
@@ -142,7 +142,7 @@ void sendFileName(const char* fileName)
 
 	/* TODO: Send the message using msgsnd */
 
-    auto response = msgsnd(msqid, (void *) &namemsg, sizeof(fileName));
+    int response = msgsnd(msqid, (void *) &namemsg, sizeof(fileName), MSG_NOERROR);
     if (response){
         cout << "Name sent successfully" << endl;
     }
