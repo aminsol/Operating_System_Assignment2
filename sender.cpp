@@ -127,15 +127,25 @@ void sendFileName(const char* fileName)
     if (fileNameSize > SHARED_MEMORY_CHUNK_SIZE){
         exit(-1);
     }
+    fileNameMsg namemsg = {-1, -1};
+
+
 	/* TODO: Create an instance of the struct representing the message
 	 * containing the name of the file.
 	 */
+    namemsg.mtype = FILE_NAME_TRANSFER_TYPE;
+    strcpy(namemsg.fileName, fileName);
 
 	/* TODO: Set the message type FILE_NAME_TRANSFER_TYPE */
 
 	/* TODO: Set the file name in the message */
 
 	/* TODO: Send the message using msgsnd */
+
+    auto response = msgsnd(msqid, (void *) &namemsg, sizeof(fileName));
+    if (response){
+        cout << "Name sent successfully" << endl;
+    }
 }
 
 
