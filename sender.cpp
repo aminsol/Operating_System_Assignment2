@@ -99,10 +99,11 @@ unsigned long sendFile(const char* fileName)
  		 */
         sndMsg.mtype = SENDER_DATA_TYPE;
         if(sndMsg.size == 0){
-            msgsnd(msqid, (void *) &sndMsg, sizeof(fileName), IPC_NOWAIT);
+            msgsnd(msqid, (void *) &sndMsg, sndMsg.size, IPC_NOWAIT);
         }
         else{
-            msgsnd(msqid, (void *) &sndMsg, sizeof(fileName), MSG_NOERROR);
+            msgsnd(msqid, (void *) &sndMsg, sndMsg.size, MSG_NOERROR);
+            msgrcv(msqid, (void *) &rcvMsg, 0, RECV_DONE_TYPE, MSG_NOERROR | IPC_NOWAIT);
         }
 		
 		/* TODO: Wait until the receiver sends us a message of type RECV_DONE_TYPE telling us 
