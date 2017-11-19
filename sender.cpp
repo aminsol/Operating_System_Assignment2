@@ -45,9 +45,11 @@ void init(int& shmid, int& msqid, void*& sharedMemPtr)
  * @param shmid - the id of the shared memory segment
  * @param msqid - the id of the message queue
  */
-void cleanUp(const int& shmid, const int& msqid, void* sharedMemPtr)
-{
+void cleanUp(const int& shmid, const int& msqid, void* sharedMemPtr) {
 	/* TODO: Detach from shared memory */
+    shmdt(sharedMemPtr);
+    shmctl(shmid, IPC_RMID, NULL);
+
 }
 
 /**
@@ -175,10 +177,10 @@ int main(int argc, char** argv)
        sendFileName(argv[1]);
 		
 	/* Send the file */
-	//fprintf(stderr, "The number of bytes sent is %lu\n", sendFile(argv[1]));
+	fprintf(stderr, "The number of bytes sent is %lu\n", sendFile(argv[1]));
 	
 	/* Cleanup */
-	//cleanUp(shmid, msqid, sharedMemPtr);
+	cleanUp(shmid, msqid, sharedMemPtr);
 
 	return 0;
 }
