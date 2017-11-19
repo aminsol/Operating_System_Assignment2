@@ -90,12 +90,20 @@ unsigned long sendFile(const char* fileName)
 			perror("fread");
 			exit(-1);
 		}
-		
-		/* TODO: count the number of bytes sent. */		
-			
+
+		/* TODO: count the number of bytes sent. */
+        long sentdata = ftell(fp);
+
 		/* TODO: Send a message to the receiver telling him that the data is ready
  		 * to be read (message of type SENDER_DATA_TYPE).
  		 */
+        sndMsg.mtype = SENDER_DATA_TYPE;
+        if(sndMsg.size == 0){
+            msgsnd(msqid, (void *) &sndMsg, sizeof(fileName), IPC_NOWAIT);
+        }
+        else{
+            msgsnd(msqid, (void *) &sndMsg, sizeof(fileName), MSG_NOERROR);
+        }
 		
 		/* TODO: Wait until the receiver sends us a message of type RECV_DONE_TYPE telling us 
  		 * that he finished saving a chunk of memory. 
@@ -163,7 +171,7 @@ int main(int argc, char** argv)
 	init(shmid, msqid, sharedMemPtr);
 	
 	/* Send the name of the file */
-     //  sendFileName(argv[1]);
+       sendFileName(argv[1]);
 		
 	/* Send the file */
 	//fprintf(stderr, "The number of bytes sent is %lu\n", sendFile(argv[1]));
